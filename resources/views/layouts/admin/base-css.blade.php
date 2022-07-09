@@ -6,9 +6,9 @@
 <link href="{{asset('')}}dash/assets/css/main.css" rel="stylesheet" />
 <!-- PAGE LEVEL STYLES-->
 @yield('style_page')
-{{--@guest
+@guest
     <link href="{{asset('')}}dash/assets/css/pages/auth-light.css" rel="stylesheet" />
-@endguest--}}
+@endguest
 <link href="{{asset('')}}dash/assets/vendors/jvectormap/jquery-jvectormap-2.0.3.css" rel="stylesheet" />
 <!-- pnotify  -->
 <link rel="stylesheet" type="text/css" href="{{asset('')}}dash/plugins/pnotify/pnotify.min.css"/>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('admin.dashboard');
+Route::group(['prefix' => 'manager'], function () {
+    Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');
+    Route::post('/change_password', [HomeController::class, 'change_password'])->name('change_password');
 });
+
+require __DIR__ . '/auth.php';

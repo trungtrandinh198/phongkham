@@ -10,7 +10,7 @@
     @include('layouts.admin.base-css')
 </head>
 <body class="fixed-navbar has-animation fixed-layout" base_url={{url('')}}>
-{{--@guest
+@guest
     @yield('content')
     <!-- CORE PLUGINS -->
     <script src="{{asset('')}}dash/assets/vendors/jquery/dist/jquery.min.js" type="text/javascript"></script>
@@ -43,7 +43,7 @@
             });
         });
     </script>
-@else--}}
+@else
 <div class="page-wrapper">
     <!-- START HEADER-->
 @include('layouts.admin.header')
@@ -76,8 +76,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            <form action="{{route('change_password')}}" method="POST">
             <div class="modal-body">
-                <form action="{{--{{route('change_password')}}--}}" method="POST">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="row">
                         <div class="col-md-12 col-xs-12">
@@ -110,12 +110,12 @@
                             </div>
                         </div>
                     </div>
-                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-cursor-pointer" data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary btn-cursor-pointer">Lưu Lại</button>
             </div>
+            </form>
         </div>
     </div>
 </div>
@@ -123,7 +123,7 @@
 
 <p id="thongbao" class="hidden">{{ session()->get( 'thongbao' ) }}</p>
 @include('layouts.admin.base-js')
-{{--@endguest--}}
+@endguest
 
 <script>
     $(document).ready(function () {
