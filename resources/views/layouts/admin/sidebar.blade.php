@@ -36,12 +36,12 @@
             </li>
             <li class="heading">Quản lý phòng khám</li>
             <li class="{{Request::is('manager/laps') ? 'active': ''}}">
-                <a href="{{ route('laps.index') }}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                <a href="{{ route('laps.index') }}"><i class="sidebar-item-icon fa fa-info"></i>
                     <span class="nav-label">Thông tin</span>
                 </a>
             </li>
             <li class="{{Request::is('manager/products') ? 'active': ''}}">
-                <a href="{{ route('products.index') }}"><i class="sidebar-item-icon fa fa-calendar"></i>
+                <a href="{{ route('products.index') }}"><i class="sidebar-item-icon fa fa-cube"></i>
                     <span class="nav-label">Sản phẩm</span>
                 </a>
             </li>

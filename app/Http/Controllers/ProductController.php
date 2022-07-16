@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -22,40 +23,103 @@ class ProductController extends Controller
         return view('admin.products', compact('products'));
     }
 
+    public function show($id)
+    {
+        $product = Product::find($id);
+        $result  = [
+            'status' => 1,
+            'data'   => $product,
+        ];
+
+        return $result;
+    }
+
     public function store(Request $request)
     {
         session(['action' => 'create']);
-        $this->validate($request,[
-            'thumbnail' => 'required|image|max:2048',
-            'blog_title' => 'required|',
-            'content' => 'required',
-            'intro' => 'required',
-            'id_cate' => 'required'
-        ],[
-            'thumbnail.required'  => 'Vui lòng chọn ảnh thumbnail',
-            'thumbnail.image'  => 'Chỉ được phép chọn hình ảnh',
-            'thumbnail.max'  => 'Dung lượng tối đã là 2MB',
-            'blog_title.required'  => 'Nhập tiêu đề',
-            'content.required'  => 'Nội dung không được để trống',
-            'intro.required'  => 'Intro không được để trống',
-            'id_cate.required'  => 'Vui lòng chọn danh mục',
+        $this->validate($request, [
+            'laps_img'        => 'required|image|max:2048',
+            'laps_pro_name'   => 'required|',
+            'laps_pro_number' => 'required',
+            'laps_pro_note'   => 'required',
+        ], [
+            'laps_img.required'        => 'Vui lòng chọn ảnh sản phẩm',
+            'laps_img.image'           => 'Chỉ được phép chọn hình ảnh',
+            'laps_img.max'             => 'Dung lượng tối đã là 2MB',
+            'laps_pro_name.required'   => 'Tên sản phẩm không được để trống',
+            'laps_pro_number.required' => 'Số lượng không được để trống',
+            'laps_pro_note.required'   => 'Ghi chú không được để trống',
         ]);
-        // upload thumbnail
-        $name =  time().rand(1,50).'_'.$request->file('thumbnail')->getClientOriginalName();
-        // $path = $request->file('thumbnail')->storeAs('public/blogs', $name);
-        $path = resize_image_upload($request->file('thumbnail'), 'blogs');
-        // create blog
-        $blog = new Product();
-        $blog->title = $request->blog_title;
-        $blog->title_slug = str_slug($request->blog_title);
-        $blog->intro = $request->intro;
-        $blog->content = $request->content;
-        $blog->tags = $request->tags;
-        $blog->status = $request->status;
-        $blog->id_cate = $request->id_cate;
-        $blog->id_user = Auth::user()->id;
-        $blog->thumbnail = $path;
-        $blog->save();
-        return redirect('manager/blogs')->with('thongbao', 'Đã thêm thành công');
+        $path                     = resize_image_upload($request->file('laps_img'), 'products');
+        $product                  = new Product();
+        $product->laps_img        = $path;
+        $product->laps_pro_name   = $request->laps_pro_name;
+        $product->laps_pro_number = $request->laps_pro_number;
+        $product->laps_pro_note   = $request->laps_pro_note;
+        $product->save();
+
+        return redirect()->route('products.index')->with('thongbao', 'Đã thêm thành công');
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function update(Request $request)
+    {
+        session(['action' => $request->id]);
+        $product = Product::find($request->id);
+
+        if ($request->file('laps_img'))
+        {
+            $this->validate($request, [
+                'laps_img'        => 'required|image|max:2048',
+                'laps_pro_name'   => 'required|',
+                'laps_pro_number' => 'required',
+                'laps_pro_note'   => 'required',
+            ], [
+                'laps_img.required'        => 'Vui lòng chọn ảnh sản phẩm',
+                'laps_img.image'           => 'Chỉ được phép chọn hình ảnh',
+                'laps_img.max'             => 'Dung lượng tối đã là 2MB',
+                'laps_pro_name.required'   => 'Tên sản phẩm không được để trống',
+                'laps_pro_number.required' => 'Số lượng không được để trống',
+                'laps_pro_note.required'   => 'Ghi chú không được để trống',
+            ]);
+
+            $product->laps_img                     = resize_image_upload($request->file('laps_img'), 'products');
+        } else {
+            $this->validate($request, [
+                'laps_pro_name'   => 'required',
+                'laps_pro_number' => 'required',
+                'laps_pro_note'   => 'required',
+            ], [
+                'laps_img.image'           => 'Chỉ được phép chọn hình ảnh',
+                'laps_img.max'             => 'Dung lượng tối đã là 2MB',
+                'laps_pro_name.required'   => 'Tên sản phẩm không được để trống',
+                'laps_pro_number.required' => 'Số lượng không được để trống',
+                'laps_pro_note.required'   => 'Ghi chú không được để trống',
+            ]);
+
+        }
+        $product->laps_pro_name   = $request->laps_pro_name;
+        $product->laps_pro_number = $request->laps_pro_number;
+        $product->laps_pro_note   = $request->laps_pro_note;
+        $product->save();
+
+        return redirect()->route('products.index')->with('thongbao', 'Chỉnh sửa thành công');
+    }
+
+    public function destroy($id)
+    {
+        $product = Product::find($id);
+        if (Storage::exists($product->laps_img))
+        {
+            Storage::delete($product->laps_img);
+        }
+        $product->delete();
+
+        return redirect()->route('products.index')->with('thongbao', 'Xoá thành công');
     }
 }
