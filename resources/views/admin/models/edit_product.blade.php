@@ -1,4 +1,4 @@
-<div class="modal fade model_add_blog" id="model_edit" tabindex="-1" role="dialog" aria-labelledby="editProduct" aria-hidden="true">
+<div class="modal fade model_edit_products" id="model_edit" tabindex="-1" role="dialog" aria-labelledby="editProduct" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
