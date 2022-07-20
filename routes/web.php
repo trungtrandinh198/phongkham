@@ -4,6 +4,7 @@ use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LapController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,14 @@ Route::group(['prefix' => 'manager'], function () {
         Route::get('/{id}', [ProductController::class, 'show'])->name('show');
         Route::patch('/update', [ProductController::class, 'update'])->name('update');
         Route::delete('/{id}', [ProductController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::group(['prefix' => 'customers', 'as'=>'customers.'], function () {
+        Route::get('/', [CustomerController::class, 'index'])->name('index');
+        Route::post('/', [CustomerController::class, 'store'])->name('store');
+        Route::get('/{id}', [CustomerController::class, 'show'])->name('show');
+        Route::patch('/update', [CustomerController::class, 'update'])->name('update');
+        Route::delete('/{id}', [CustomerController::class, 'destroy'])->name('destroy');
     });
 });
 

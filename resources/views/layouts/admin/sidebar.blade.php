@@ -45,6 +45,11 @@
                     <span class="nav-label">Sản phẩm</span>
                 </a>
             </li>
+            <li class="{{Request::is('manager/customers') ? 'active': ''}}">
+                <a href="{{ route('customers.index') }}"><i class="sidebar-item-icon fa fa-users"></i>
+                    <span class="nav-label">Khách hàng</span>
+                </a>
+            </li>
             <li class="heading">Tiện ích</li>
             <li class="{{Request::is('manager/calendar') ? 'active': ''}}">
                 <a href="{{url('/manager/calendar')}}"><i class="sidebar-item-icon fa fa-calendar"></i>
